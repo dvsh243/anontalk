@@ -38,10 +38,18 @@ class Peer:
                     ip, port = sender_data.split(' ')[1:]
                     self.connect_init_p2p( (ip, int(port)) )
                     print(f"updated {self.SENDER_ADDR=}")
+                    continue
 
                 print(f"\rRENDEZVOUS> {sender_data}\n> ", end='')
 
+
             else:
+                
+                if sender_data == '/disconnect': # the peer decided to disconnect 
+                    print(f"[{self.SENDER_ADDR} decided to disconnect]")                
+                    self.SENDER_ADDR = self.RENDEZVOUS
+                    continue
+
                 print(f"{sender_addr}> {sender_data}\n> ", end='')
 
 
@@ -58,7 +66,8 @@ class Peer:
         while True:
             msg = input('> ')
 
-            if msg.startswith('/') and self.SENDER_ADDR != self.RENDEZVOUS: 
+            if msg.startswith('/') and self.SENDER_ADDR != self.RENDEZVOUS:
+                self.sock.sendto(b'/disconnect', self.SENDER_ADDR) 
                 self.SENDER_ADDR = self.RENDEZVOUS  # commands go to the rendezvous server
                 print(f"[SENDER_ADDR set to Rendezvous]")
 
