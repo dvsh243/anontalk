@@ -47,7 +47,7 @@ class RendezvousServer:
                 self.sock.sendto(f"ONLINE[{len(self.peers)}]: {self.peers}".encode(), peer_addr)
             
             elif command.startswith('/connect'):
-                pass
+                print(f"[init p2p connection: {peer_addr} <> {command.split(' ')[1:]}]")
 
             else:
                 self.sock.sendto(b"invalid command", peer_addr)
@@ -57,4 +57,4 @@ class RendezvousServer:
 
 server = RendezvousServer()
 # implement cronjob that pings all peers and check for availability
-server.listen()  # non blocking
+server.listen()  # blocking loop

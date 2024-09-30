@@ -51,5 +51,13 @@ class Peer:
             msg = input('> ')
             self.sock.sendto(msg.encode(), self.SENDER_ADDR)
 
+            if msg.startswith('/connect'):
+                ip, port = msg.split(' ')[1:]
+                self.connect_init_p2p( (ip, int(port)) )
+
+    def connect_init_p2p(self, peer_addr):
+        """update self.SENDER_ADDR and start a p2p connection with peer"""
+        print(f"[initializing connection with {peer_addr}]")
+
 
 peer = Peer( int(sys.argv[1]) )
