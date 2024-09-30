@@ -30,11 +30,19 @@ class Peer:
     def listener_thread(self) -> None:
         while True:
             sender_data, sender_addr = self.sock.recvfrom(2048)
+            sender_data = sender_data.decode()
 
             if sender_addr == self.RENDEZVOUS:
-                print(f"\rRENDEZVOUS> {sender_data.decode()}\n> ", end='')
+
+                if sender_data.startswith('updateSender'):
+                    ip, port = sender_data.split(' ')[1:]
+                    self.connect_init_p2p( (ip, int(port)) )
+                    print(f"updated {self.SENDER_ADDR=}")
+
+                print(f"\rRENDEZVOUS> {sender_data}\n> ", end='')
+
             else:
-                print(f"{sender_addr}> {sender_data.decode()}\n> ", end='')
+                print(f"{sender_addr}> {sender_data}\n> ", end='')
 
 
     def connect_rendezvous(self):
@@ -49,15 +57,17 @@ class Peer:
     def send_command(self):
         while True:
             msg = input('> ')
+
+            if msg.startswith('/') and self.SENDER_ADDR != self.RENDEZVOUS: 
+                self.SENDER_ADDR = self.RENDEZVOUS  # commands go to the rendezvous server
+                print(f"[SENDER_ADDR set to Rendezvous]")
+
             self.sock.sendto(msg.encode(), self.SENDER_ADDR)
 
-            if msg.startswith('/connect'):
-                ip, port = msg.split(' ')[1:]
-                self.connect_init_p2p( (ip, int(port)) )
 
     def connect_init_p2p(self, peer_addr):
-        """update self.SENDER_ADDR and start a p2p connection with peer"""
         print(f"[initializing connection with {peer_addr}]")
-
+        self.SENDER_ADDR = peer_addr
+    
 
 peer = Peer( int(sys.argv[1]) )
