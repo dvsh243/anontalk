@@ -20,7 +20,7 @@ class Peer:
         self.sender = Sender(self.sock, self)
 
         self.connect_rendezvous()
-        self.start_listener()  # non blocking thread
+        self.start_listener()  # non blocking
         self.start_sender()  # blocking
 
     def connect_rendezvous(self):

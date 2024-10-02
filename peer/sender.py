@@ -1,4 +1,3 @@
-import threading
 
 
 class Sender:
@@ -6,7 +5,7 @@ class Sender:
         self.sock = sock
         self.peer = peer
 
-    def start(self, ):
+    def start(self):
         while True:
             msg = input('> ')
             self.sock.sendto(msg.encode(), self.peer.SENDER_ADDR)
