@@ -7,5 +7,5 @@ class Sender:
 
     def start(self):
         while True:
-            msg = input()
+            msg = input('\r> ')
             self.sock.sendto(msg.encode(), self.peer.SENDER_ADDR)

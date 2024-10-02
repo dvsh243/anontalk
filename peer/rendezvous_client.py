@@ -8,7 +8,7 @@ class RendezvousClient:
 
     def connect(self):
         username = input("please enter a username: ")  # should be one word without hyphens
-        self.sock.sendto(f"connect as - {username}".encode(), self.RENDEZVOUS_ADDR)
+        self.sock.sendto(f"/connect {username}".encode(), self.RENDEZVOUS_ADDR)
 
         data = self.sock.recv(1024)
         print(f"rendezvous: {data.decode()}\n> ", end='')
