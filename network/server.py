@@ -46,23 +46,20 @@ class RendezvousServer:
                 # remove self from the list, since cant connect to self
                 self.sock.sendto(f"ONLINE[{len(self.peers)}]: {self.peers}".encode(), peer_addr)
             
-            elif command.startswith('/connect'):
-                ip, port = command.split(' ')[1:]
-                self.connect_init_p2p( peer1_addr=peer_addr, peer2_addr=(ip, int(port)) )
+            elif command.startswith('/whisper'):
+                # ip, port = command.split(' ')[1:]
+                # get the ip, port from username provided
+                # self.forward_whisper_addr( peer1_addr=peer_addr, peer2_addr=(ip, int(port)) )
+                pass
 
             else:
                 self.sock.sendto(b"invalid command", peer_addr)
 
 
-    def connect_init_p2p(self, peer1_addr, peer2_addr):
-        print(f"[init p2p connection: {peer1_addr} <> {peer2_addr}]")
-
-        self.sock.sendto(f"{peer1_addr} connected to you".encode(), peer2_addr)
-        
-        # send a command from the rendezvous server to change the SENDER_ADDR of both the clients
-        self.sock.sendto(f"updateSender {peer1_addr[0]} {peer1_addr[1]}".encode(), peer2_addr)
-        self.sock.sendto(f"updateSender {peer2_addr[0]} {peer2_addr[1]}".encode(), peer1_addr)
-        print(f"[changed both of theirs SENDER_ADDR]")
+    def forward_whisper_addr(self, peer1_addr, peer2_addr):
+        # forward connection details and metadata of `peer2` to `peer1`
+        self.sock.sendto(f"whisper_details {peer2_addr}", peer1_addr)
+        print(f"[forwarded whisper address]")
 
 server = RendezvousServer()
 # implement cronjob that pings all peers and check for availability

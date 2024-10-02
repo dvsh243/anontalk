@@ -15,4 +15,4 @@ class Listener:
             sender_data, sender_addr = self.sock.recvfrom(2048)
             sender_data = sender_data.decode()
 
-            print(f"listener> {sender_data}")
+            print(f"\rlistener> {sender_data} \n> ", end='')
