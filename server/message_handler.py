@@ -20,8 +20,8 @@ class MessageHandler:
 
     def handle_message(self, message, peer_addr):
         # broadcast this to all peers
-        print(f"message recieved: {message}")
-        
+        for recv_peer_addr in self.peer_manager.get_broadcast_list(peer_addr):
+            self.send_message(message, recv_peer_addr)
 
     def handle_command(self, message, peer_addr):
         command = message.split(' ')[0]
