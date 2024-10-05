@@ -1,4 +1,4 @@
-
+import json
 
 class Sender:
     def __init__(self, sock, peer):

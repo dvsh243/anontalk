@@ -24,7 +24,7 @@ class Peer:
         self.start_sender()  # blocking
 
     def connect_rendezvous(self):
-        self.rendezvous_client.connect()
+        self.username = self.rendezvous_client.connect()
 
     def start_listener(self):
         self.listener.start()

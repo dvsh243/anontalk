@@ -6,7 +6,7 @@ class RendezvousClient:
         self.sock = sock
         self.RENDEZVOUS_ADDR = rendezvous_addr
 
-    def connect(self):
+    def connect(self) -> str:
         username = input("please enter a username: ")  # should be one word without hyphens
         self.sock.sendto(f"/connect {username}".encode(), self.RENDEZVOUS_ADDR)
 
