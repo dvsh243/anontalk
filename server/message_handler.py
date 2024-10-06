@@ -1,15 +1,16 @@
-import socket
+from peer_manager import PeerManager
 
 
 class MessageHandler:
-    def __init__(self, sock, peer_manager):
+    def __init__(self, sock, peer_manager: PeerManager):
         self.peer_manager = peer_manager
         self.sock = sock
 
         self.commands = {
             '/connect': self.handle_connect,  # this is a system generated command, dont let a peer enter this command
-            '/online': self.handle_online,
-            '/whisper': self.handle_whisper,
+            '/online': self.handle_online,    # get a list of all online usernames
+            '/whisper': self.handle_whisper,  # privately message a peer (message goes through server)
+            '/block': self.handle_block       # block the user and you wont see him on your feed
         }
 
     def handle(self, message, peer_addr):
@@ -47,7 +48,6 @@ class MessageHandler:
 
 
     def handle_whisper(self, message: str, peer_addr: tuple[str, str]):
-        # assert that the /whisper arguments are valid
 
         _, username = message.split(' ')[:2]
         whisper_msg = "".join( message.split(' ')[2:] )
@@ -61,6 +61,12 @@ class MessageHandler:
         self_user = self.peer_manager.get_username_addr(peer_addr)
         self.send_message(f"{self_user} whispered> {whisper_msg}", whisper_addr)
         
+    
+    def handle_block(self, message: str, peer_addr: tuple[str, int]):
+        to_block_user = message.split(' ')[1]
+        to_block_addr = self.peer_manager.get_username_addr(to_block_user)
+
+        self.peer_manager.add_block(peer_addr, to_block_addr)
 
 
     def handle_invalid_command(self, peer_addr):

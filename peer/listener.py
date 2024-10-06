@@ -1,5 +1,4 @@
 import threading
-from whisper import send_whisper
 
 class Listener:
     def __init__(self, sock, peer):
@@ -15,7 +14,4 @@ class Listener:
             sender_data, sender_addr = self.sock.recvfrom(2048)
             sender_data = sender_data.decode()
 
-            if sender_data.startswith("[WHISPER]"):
-                send_whisper(self.sock, sender_data)
-            else:
-                print(f"\r{sender_data} \n> ", end='')
+            print(f"\r{sender_data} \n> ", end='')
