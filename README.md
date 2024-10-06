@@ -1,2 +1,2 @@
 # anontalk 
-### anontalk is a UDP based P2P messaging application that runs on command line
+### anontalk is a UDP based Internet Relay Chat Application that runs on command line

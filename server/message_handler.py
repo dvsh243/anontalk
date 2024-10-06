@@ -47,10 +47,20 @@ class MessageHandler:
 
 
     def handle_whisper(self, message: str, peer_addr: tuple[str, str]):
-        # extract username
-        # if username doesnt exist in peer manager, return invalid command
-        # else return the address to the username
-        pass
+        # assert that the /whisper arguments are valid
+
+        _, username = message.split(' ')[:2]
+        whisper_msg = "".join( message.split(' ')[2:] )
+        whisper_addr = self.peer_manager.get_username_addr(username)
+
+        if not whisper_addr:
+            self.handle_invalid_command(peer_addr)
+            return
+
+        # print(f"[whispering] {whisper_addr} -- {whisper_msg}")
+        self_user = self.peer_manager.get_username_addr(peer_addr)
+        self.send_message(f"{self_user} whispered> {whisper_msg}", whisper_addr)
+        
 
 
     def handle_invalid_command(self, peer_addr):
